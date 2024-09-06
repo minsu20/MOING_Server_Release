@@ -23,6 +23,27 @@
 
 <br>
 
+## 백엔드 기술 스택
+📀 **Back-end :** 
+<img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=SpringBoot&logoColor=white"> 
+<img src="https://img.shields.io/badge/SpringDataJpa-6DB33F?style=flat-square&logo=SpringDataJpat&logoColor=white"> 
+<img src="https://img.shields.io/badge/QueryDsl-137CBD?style=flat-square&logo=QueryDsl&logoColor=white">
+<img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white">
+<img src="https://img.shields.io/badge/JWT-black?style=flat-square&logo=JSON%20web%20tokens">
+ 
+
+💾 **Infra & DB :**
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white">
+<img src="https://img.shields.io/badge/FCM-FFCA28?style=flat-square&logo=Firebase&logoColor=white">
+<img src="https://img.shields.io/badge/AmazonEC2-FF9900?style=flat-square&logo=AmazonEC2&logoColor=white">
+<img src="https://img.shields.io/badge/AmazonRDS-527FFF?style=flat-square&logo=AmazonRDS&logoColor=white">
+<img src="https://img.shields.io/badge/AmazonS3-569A31?style=flat-square&logo=AmazonS3&logoColor=white">
+
+🚀 **CI/CD :**
+<img src="https://img.shields.io/badge/GithubActions-2088FF?style=flat-square&logo=GithubActions&logoColor=white">
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat-square&logo=Docker&logoColor=white">
+<img src="https://img.shields.io/badge/NGINX-009639?style=flat-square&logo=NGINX&logoColor=white">
+
 ## System Architecture
 <img width="833" alt="image" src="https://github.com/user-attachments/assets/ce042880-9474-4fbc-b446-9e684966220d">
 
