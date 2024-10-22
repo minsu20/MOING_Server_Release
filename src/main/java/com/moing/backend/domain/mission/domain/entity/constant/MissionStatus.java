@@ -6,9 +6,9 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum MissionStatus {
-    END,
-    ONGOING,
-    SUCCESS,
-    FAIL,
-    WAIT
+	END,
+	ONGOING,
+	SUCCESS,
+	FAIL,
+	WAIT
 }

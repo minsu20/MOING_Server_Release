@@ -8,6 +8,6 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class GetTeamDetailResponse {
-    private Integer boardNum; //안 읽은 게시글
-    private TeamInfo teamInfo;
+	private Integer boardNum; //안 읽은 게시글
+	private TeamInfo teamInfo;
 }

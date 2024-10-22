@@ -9,9 +9,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public class GetCurrentStatusResponse {
 
-    private String name;
+	private String name;
 
-    private String introduction;
+	private String introduction;
 
-    private String profileImgUrl;
+	private String profileImgUrl;
 }

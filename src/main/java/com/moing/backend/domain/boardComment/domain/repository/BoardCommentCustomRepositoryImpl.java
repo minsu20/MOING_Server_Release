@@ -1,5 +1,14 @@
 package com.moing.backend.domain.boardComment.domain.repository;
 
+import static com.moing.backend.domain.boardComment.domain.entity.QBoardComment.*;
+import static com.moing.backend.domain.member.domain.entity.QMember.*;
+import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.*;
+
+import java.util.List;
+import java.util.Optional;
+
+import javax.persistence.EntityManager;
+
 import com.moing.backend.domain.block.domain.repository.BlockRepositoryUtils;
 import com.moing.backend.domain.comment.application.dto.response.CommentBlocks;
 import com.moing.backend.domain.comment.application.dto.response.GetCommentResponse;
@@ -13,74 +22,67 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-import java.util.Optional;
+public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepository {
 
-import static com.moing.backend.domain.boardComment.domain.entity.QBoardComment.boardComment;
-import static com.moing.backend.domain.member.domain.entity.QMember.member;
-import static com.moing.backend.domain.teamMember.domain.entity.QTeamMember.teamMember;
+	private final JPAQueryFactory queryFactory;
 
-public class BoardCommentCustomRepositoryImpl implements BoardCommentCustomRepository{
+	public BoardCommentCustomRepositoryImpl(EntityManager em) {
+		this.queryFactory = new JPAQueryFactory(em);
+	}
 
-    private final JPAQueryFactory queryFactory;
+	@Override
+	public GetCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
 
-    public BoardCommentCustomRepositoryImpl(EntityManager em) {
-        this.queryFactory = new JPAQueryFactory(em);
-    }
+		BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(teamMember.getTeamMemberId(),
+			boardComment.teamMember.member.memberId);
 
+		List<CommentBlocks> commentBlocks = queryFactory
+			.select(new QCommentBlocks(
+				boardComment.boardCommentId,
+				boardComment.content,
+				boardComment.teamMember.member.nickName,
+				boardComment.isLeader,
+				boardComment.teamMember.member.profileImage,
+				ExpressionUtils.as(JPAExpressions
+					.selectOne()
+					.from(QTeamMember.teamMember)
+					.where(QTeamMember.teamMember.eq(teamMember)
+						.and(QTeamMember.teamMember.eq(boardComment.teamMember)))
+					.exists(), "isWriter"),
+				boardComment.teamMember.isDeleted,
+				boardComment.createdDate,
+				boardComment.teamMember.member.memberId))
+			.from(boardComment)
+			.leftJoin(boardComment.teamMember, QTeamMember.teamMember)
+			.leftJoin(boardComment.teamMember.member, member)
+			.where(boardComment.board.boardId.eq(boardId)
+				.and(blockCondition))
+			.orderBy(boardComment.createdDate.asc())
+			.fetch();
 
-    @Override
-    public GetCommentResponse findBoardCommentAll(Long boardId, TeamMember teamMember) {
+		return new GetCommentResponse(commentBlocks);
+	}
 
-        BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(teamMember.getTeamMemberId(), boardComment.teamMember.member.memberId);
+	@Override
+	public Optional<List<NewUploadInfo>> findNewUploadInfo(Long memberId, Long boardId) {
+		BooleanExpression blockCondition = BlockRepositoryUtils.blockCondition(boardComment.teamMember.member.memberId,
+			memberId);
 
-        List<CommentBlocks> commentBlocks = queryFactory
-                .select(new QCommentBlocks(
-                        boardComment.boardCommentId,
-                        boardComment.content,
-                        boardComment.teamMember.member.nickName,
-                        boardComment.isLeader,
-                        boardComment.teamMember.member.profileImage,
-                        ExpressionUtils.as(JPAExpressions
-                                .selectOne()
-                                .from(QTeamMember.teamMember)
-                                .where(QTeamMember.teamMember.eq(teamMember)
-                                        .and(QTeamMember.teamMember.eq(boardComment.teamMember)))
-                                .exists(), "isWriter"),
-                        boardComment.teamMember.isDeleted,
-                        boardComment.createdDate,
-                        boardComment.teamMember.member.memberId))
-                .from(boardComment)
-                .leftJoin(boardComment.teamMember, QTeamMember.teamMember)
-                .leftJoin(boardComment.teamMember.member, member)
-                .where(boardComment.board.boardId.eq(boardId)
-                        .and(blockCondition))
-                .orderBy(boardComment.createdDate.asc())
-                .fetch();
+		List<NewUploadInfo> result = queryFactory.select(Projections.constructor(NewUploadInfo.class,
+				boardComment.teamMember.member.fcmToken,
+				boardComment.teamMember.member.memberId,
+				boardComment.teamMember.member.isCommentPush,
+				boardComment.teamMember.member.isSignOut))
+			.distinct()
+			.from(boardComment)
+			.leftJoin(boardComment.teamMember, teamMember)
+			.leftJoin(boardComment.teamMember.member, member)
+			.where(boardComment.board.boardId.eq(boardId) //게시글의 댓글인데
+				.and(boardComment.teamMember.member.memberId.ne(memberId)) //나는 포함 안하고
+				.and(boardComment.teamMember.isDeleted.eq(false)) //탈퇴한 사람도 포함 안함
+				.and(blockCondition))
+			.fetch();
 
-        return new GetCommentResponse(commentBlocks);
-    }
-
-    @Override
-    public Optional<List<NewUploadInfo>> findNewUploadInfo(Long memberId, Long boardId) {
-        BooleanExpression blockCondition= BlockRepositoryUtils.blockCondition(boardComment.teamMember.member.memberId, memberId);
-
-        List<NewUploadInfo> result = queryFactory.select(Projections.constructor(NewUploadInfo.class,
-                        boardComment.teamMember.member.fcmToken,
-                        boardComment.teamMember.member.memberId,
-                        boardComment.teamMember.member.isCommentPush,
-                        boardComment.teamMember.member.isSignOut))
-                .distinct()
-                .from(boardComment)
-                .leftJoin(boardComment.teamMember, teamMember)
-                .leftJoin(boardComment.teamMember.member, member)
-                .where(boardComment.board.boardId.eq(boardId) //게시글의 댓글인데
-                        .and(boardComment.teamMember.member.memberId.ne(memberId)) //나는 포함 안하고
-                        .and(boardComment.teamMember.isDeleted.eq(false)) //탈퇴한 사람도 포함 안함
-                                .and(blockCondition))
-                .fetch();
-
-        return result.isEmpty() ? Optional.empty() : Optional.of(result);
-    }
+		return result.isEmpty() ? Optional.empty() : Optional.of(result);
+	}
 }

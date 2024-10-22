@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class TestRequest {
-    private String socialId;
+	private String socialId;
 
-    private String fcmToken;
+	private String fcmToken;
 }

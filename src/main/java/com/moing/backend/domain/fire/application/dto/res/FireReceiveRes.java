@@ -9,20 +9,21 @@ import lombok.Getter;
 @AllArgsConstructor
 public class FireReceiveRes {
 
-    private Long receiveMemberId;
-    private String nickname;
-    private String fireStatus;
-    private String profileImg;
+	private Long receiveMemberId;
+	private String nickname;
+	private String fireStatus;
+	private String profileImg;
 
-    public FireReceiveRes(Long receiveMemberId, String nickname,String profileImg) {
-        this.receiveMemberId = receiveMemberId;
-        this.nickname = nickname;
-        this.profileImg = profileImg;
-    }
+	public FireReceiveRes(Long receiveMemberId, String nickname, String profileImg) {
+		this.receiveMemberId = receiveMemberId;
+		this.nickname = nickname;
+		this.profileImg = profileImg;
+	}
 
-    public void updateFireStatus(boolean status) {
-        if (status)
-            this.fireStatus = "True";
-        else this.fireStatus = "False";
-    }
+	public void updateFireStatus(boolean status) {
+		if (status)
+			this.fireStatus = "True";
+		else
+			this.fireStatus = "False";
+	}
 }

@@ -10,8 +10,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class BlockMemberRes {
-    private Long targetId;
-    private String nickName;
-    private String introduce;
-    private String profileImg;
+	private Long targetId;
+	private String nickName;
+	private String introduce;
+	private String profileImg;
 }

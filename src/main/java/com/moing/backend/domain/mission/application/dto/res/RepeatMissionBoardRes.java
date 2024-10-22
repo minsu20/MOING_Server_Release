@@ -8,47 +8,48 @@ import lombok.Setter;
 @Setter
 @Builder
 public class RepeatMissionBoardRes {
-    private Long missionId;
-    private String title;
+	private Long missionId;
+	private String title;
 
-    private String dueTo; // 요일 상태 넘겨주기
-//    private String status;
-    private Long done;
-    private int number;
-    private String way;
-    private String status;
-    private Boolean isRead;
+	private String dueTo; // 요일 상태 넘겨주기
+	//    private String status;
+	private Long done;
+	private int number;
+	private String way;
+	private String status;
+	private Boolean isRead;
 
+	public RepeatMissionBoardRes(Long missionId, String title, Long done, int number, String way, String status,
+		Boolean isRead) {
+		this.missionId = missionId;
+		this.title = title;
+		this.dueTo = "False";
+		this.number = number;
+		this.done = done;
+		this.way = way;
+		this.status = status;
+		this.isRead = isRead;
+	}
 
-    public RepeatMissionBoardRes(Long missionId, String title, Long done,int number,String way,String status, Boolean isRead) {
-        this.missionId = missionId;
-        this.title = title;
-        this.dueTo="False";
-        this.number = number;
-        this.done = done;
-        this.way = way;
-        this.status = status;
-        this.isRead=isRead;
-    }
+	public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number, String way) {
+		this.missionId = missionId;
+		this.title = title;
+		this.dueTo = "False";
+		this.done = done;
+		this.number = number;
+		this.way = way;
+	}
 
-    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number,String way) {
-        this.missionId = missionId;
-        this.title = title;
-        this.dueTo = "False";
-        this.done = done;
-        this.number = number;
-        this.way = way;
-    }
-
-    @Builder
-    public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number, String way, String status, Boolean isRead) {
-        this.missionId = missionId;
-        this.title = title;
-        this.dueTo = dueTo;
-        this.done = done;
-        this.number = number;
-        this.way = way;
-        this.status = status;
-        this.isRead=isRead;
-    }
+	@Builder
+	public RepeatMissionBoardRes(Long missionId, String title, String dueTo, Long done, int number, String way,
+		String status, Boolean isRead) {
+		this.missionId = missionId;
+		this.title = title;
+		this.dueTo = dueTo;
+		this.done = done;
+		this.number = number;
+		this.way = way;
+		this.status = status;
+		this.isRead = isRead;
+	}
 }

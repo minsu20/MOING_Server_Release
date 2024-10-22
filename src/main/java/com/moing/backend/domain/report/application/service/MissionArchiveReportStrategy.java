@@ -1,45 +1,43 @@
 package com.moing.backend.domain.report.application.service;
 
-import com.moing.backend.domain.mission.domain.entity.Mission;
-import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
-import com.moing.backend.domain.missionArchive.application.dto.req.MissionArchiveReq;
-import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
-import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
-import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
-import lombok.RequiredArgsConstructor;
+import static com.moing.backend.domain.report.presentation.constant.ReportResponseMessage.*;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.moing.backend.domain.report.presentation.constant.ReportResponseMessage.REPORT_MESSAGE;
-import static com.moing.backend.domain.report.presentation.constant.ReportResponseMessage.REPORT_PHOTO;
+import com.moing.backend.domain.mission.domain.entity.constant.MissionWay;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchive;
+import com.moing.backend.domain.missionArchive.domain.entity.MissionArchiveStatus;
+import com.moing.backend.domain.missionArchive.domain.service.MissionArchiveQueryService;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MissionArchiveReportStrategy implements ReportStrategy {
 
+	private final MissionArchiveQueryService missionArchiveQueryService;
 
-    private final MissionArchiveQueryService missionArchiveQueryService;
+	@Override
+	public String processReport(Long targetId) {
+		MissionArchive missionArchive = missionArchiveQueryService.findByMissionArchiveId(targetId);
 
+		if (isCompletedPhotoArchive(missionArchive)) {
+			missionArchive.updateArchive(REPORT_PHOTO.getMessage());
+		} else {
+			missionArchive.updateArchive(REPORT_MESSAGE.getMessage());
+		}
 
-    @Override
-    public String processReport(Long targetId) {
-        MissionArchive missionArchive = missionArchiveQueryService.findByMissionArchiveId(targetId);
+		return getTargetMemberNickName(missionArchive);
+	}
 
-        if (isCompletedPhotoArchive(missionArchive)) {
-            missionArchive.updateArchive(REPORT_PHOTO.getMessage());
-        } else {
-            missionArchive.updateArchive(REPORT_MESSAGE.getMessage());
-        }
+	private String getTargetMemberNickName(MissionArchive missionArchive) {
+		return missionArchive.getWriterNickName();
+	}
 
-        return getTargetMemberNickName(missionArchive);
-    }
-
-    private String getTargetMemberNickName(MissionArchive missionArchive){
-        return missionArchive.getWriterNickName();
-    }
-
-    private Boolean isCompletedPhotoArchive (MissionArchive archive) {
-        return archive.getMission().getWay().equals(MissionWay.PHOTO) && archive.getStatus().equals(MissionArchiveStatus.COMPLETE);
-    }
+	private Boolean isCompletedPhotoArchive(MissionArchive archive) {
+		return archive.getMission().getWay().equals(MissionWay.PHOTO) && archive.getStatus()
+			.equals(MissionArchiveStatus.COMPLETE);
+	}
 }

@@ -1,5 +1,12 @@
 package com.moing.backend.domain.team.domain.service;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.missionArchive.application.dto.res.MyTeamsRes;
 import com.moing.backend.domain.mypage.application.dto.response.GetMyPageTeamBlock;
@@ -11,65 +18,60 @@ import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.team.domain.repository.TeamRepository;
 import com.moing.backend.domain.team.exception.NotFoundByTeamIdException;
 import com.moing.backend.global.annotation.DomainService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @DomainService
 @RequiredArgsConstructor
 public class TeamGetService {
-    private final TeamRepository teamRepository;
+	private final TeamRepository teamRepository;
 
-    public GetTeamResponse getTeamByMember(Member member) {
-        GetTeamResponse getTeamResponse = teamRepository.findTeamByMemberId(member.getMemberId());
-        getTeamResponse.updateMemberInfo(member);
-        return getTeamResponse;
-    }
+	public GetTeamResponse getTeamByMember(Member member) {
+		GetTeamResponse getTeamResponse = teamRepository.findTeamByMemberId(member.getMemberId());
+		getTeamResponse.updateMemberInfo(member);
+		return getTeamResponse;
+	}
 
-    public List<Long> getTeamIdByMemberId(Long memberId) {
-        return teamRepository.findTeamIdByMemberId(memberId);
-    }
+	public List<Long> getTeamIdByMemberId(Long memberId) {
+		return teamRepository.findTeamIdByMemberId(memberId);
+	}
 
-    public Team getTeamIncludeDeletedByTeamId(Long teamId){
-        return teamRepository.findTeamIncludeDeletedByTeamId(teamId).orElseThrow(NotFoundByTeamIdException::new);
-    }
+	public Team getTeamIncludeDeletedByTeamId(Long teamId) {
+		return teamRepository.findTeamIncludeDeletedByTeamId(teamId).orElseThrow(NotFoundByTeamIdException::new);
+	}
 
-    public Team getTeamByTeamId(Long teamId){
-        return teamRepository.findTeamByTeamId(teamId).orElseThrow(NotFoundByTeamIdException::new);
-    }
+	public Team getTeamByTeamId(Long teamId) {
+		return teamRepository.findTeamByTeamId(teamId).orElseThrow(NotFoundByTeamIdException::new);
+	}
 
-    public List<GetMyPageTeamBlock> getMyPageTeamBlockByMemberId(Long memberId){
-        return teamRepository.findMyPageTeamByMemberId(memberId);
-    }
+	public List<GetMyPageTeamBlock> getMyPageTeamBlockByMemberId(Long memberId) {
+		return teamRepository.findMyPageTeamByMemberId(memberId);
+	}
 
-    public List<MyTeamsRes> getTeamNameByTeamId(List<Long> teamId) {
-        return teamRepository.findTeamNameByTeamId(teamId);
-    }
+	public List<MyTeamsRes> getTeamNameByTeamId(List<Long> teamId) {
+		return teamRepository.findTeamNameByTeamId(teamId);
+	}
 
-    public List<GetLeaderInfoResponse> getLeaderInfoResponses(List<Long> teamIds){
-        return teamRepository.findLeaderInfoByTeamIds(teamIds);
-    }
+	public List<GetLeaderInfoResponse> getLeaderInfoResponses(List<Long> teamIds) {
+		return teamRepository.findLeaderInfoByTeamIds(teamIds);
+	}
 
-    public Page<GetNewTeamResponse> getNewTeams(String dateSort, Pageable pageable) {
-        int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
-        pageable = PageRequest.of(page, pageable.getPageSize(), Sort.by("no").descending());
-        return teamRepository.findNewTeam(dateSort, pageable);
-    }
+	public Page<GetNewTeamResponse> getNewTeams(String dateSort, Pageable pageable) {
+		int page = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
+		pageable = PageRequest.of(page, pageable.getPageSize(), Sort.by("no").descending());
+		return teamRepository.findNewTeam(dateSort, pageable);
+	}
 
-    public GetTeamCountResponse getTeamCountAndName(Long teamId, Long memberId) {
+	public GetTeamCountResponse getTeamCountAndName(Long teamId, Long memberId) {
 
-        return teamRepository.findTeamCount(memberId, teamId);
-    }
+		return teamRepository.findTeamCount(memberId, teamId);
+	}
 
-    public Long getTodayNewTeams(){
-        return teamRepository.getTodayNewTeams();
-    }
+	public Long getTodayNewTeams() {
+		return teamRepository.getTodayNewTeams();
+	}
 
-    public Long getYesterdayNewTeams(){
-        return teamRepository.getYesterdayNewTeams();
-    }
+	public Long getYesterdayNewTeams() {
+		return teamRepository.getYesterdayNewTeams();
+	}
 }

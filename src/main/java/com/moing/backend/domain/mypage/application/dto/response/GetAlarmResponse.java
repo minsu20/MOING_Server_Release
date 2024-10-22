@@ -11,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Getter
 public class GetAlarmResponse {
 
-    private boolean isNewUploadPush;
-    private boolean isRemindPush;
-    private boolean isFirePush;
-    private boolean isCommentPush;
+	private boolean isNewUploadPush;
+	private boolean isRemindPush;
+	private boolean isFirePush;
+	private boolean isCommentPush;
 }

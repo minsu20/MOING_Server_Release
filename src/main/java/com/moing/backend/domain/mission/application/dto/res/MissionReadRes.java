@@ -9,15 +9,15 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MissionReadRes {
 
-    private String title;
-    private String dueTo;
+	private String title;
+	private String dueTo;
 
-    private String rule;
-    private String content;
+	private String rule;
+	private String content;
 
-    private String type;
-    private String way;
+	private String type;
+	private String way;
 
-    private Boolean isLeader;
+	private Boolean isLeader;
 
 }

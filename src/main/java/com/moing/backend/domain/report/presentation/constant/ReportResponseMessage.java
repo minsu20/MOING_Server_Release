@@ -7,12 +7,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ReportResponseMessage {
 
-    CREATE_REPORT_SUCCESS("게시글 신고를 완료 했습니다."),
-    REPORT_MESSAGE("신고 접수로 삭제되었습니다."),
-    REPORT_PHOTO("https://modagbul.s3.ap-northeast-2.amazonaws.com/reportImage.png");
+	CREATE_REPORT_SUCCESS("게시글 신고를 완료 했습니다."),
+	REPORT_MESSAGE("신고 접수로 삭제되었습니다."),
+	REPORT_PHOTO("https://modagbul.s3.ap-northeast-2.amazonaws.com/reportImage.png");
 
-    private final String message;
-
+	private final String message;
 
 }
 

@@ -7,5 +7,5 @@ import lombok.Getter;
 @Builder
 public class FireThrowRes {
 
-    private Long receiveMemberId;
+	private Long receiveMemberId;
 }

@@ -8,5 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class UpdateBoardResponse {
-    private Long boardId;
+	private Long boardId;
 }

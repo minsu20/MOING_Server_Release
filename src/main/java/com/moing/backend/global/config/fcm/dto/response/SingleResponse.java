@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class SingleResponse {
-    private final String response;
+	private final String response;
 
 }

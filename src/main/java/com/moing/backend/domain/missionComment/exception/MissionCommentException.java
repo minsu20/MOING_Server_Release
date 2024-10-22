@@ -1,11 +1,12 @@
 package com.moing.backend.domain.missionComment.exception;
 
-import com.moing.backend.global.exception.ApplicationException;
-import com.moing.backend.global.response.ErrorCode;
 import org.springframework.http.HttpStatus;
 
+import com.moing.backend.global.exception.ApplicationException;
+import com.moing.backend.global.response.ErrorCode;
+
 public abstract class MissionCommentException extends ApplicationException {
-    protected MissionCommentException(ErrorCode errorCode, HttpStatus httpStatus) {
-        super(errorCode, httpStatus);
-    }
+	protected MissionCommentException(ErrorCode errorCode, HttpStatus httpStatus) {
+		super(errorCode, httpStatus);
+	}
 }

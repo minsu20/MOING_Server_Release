@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 @Getter
 public class FireThrowReq {
 
-    private String message;
+	private String message;
 
-    @Builder
-    public FireThrowReq(String message) {
-        this.message = message;
-    }
+	@Builder
+	public FireThrowReq(String message) {
+		this.message = message;
+	}
 }

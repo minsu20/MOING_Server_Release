@@ -8,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @AllArgsConstructor
 public class TraceStatus {
-    private String threadId;
-    private Long startTime;
-    private String className;
-    private String methodName;
+	private String threadId;
+	private Long startTime;
+	private String className;
+	private String methodName;
 }

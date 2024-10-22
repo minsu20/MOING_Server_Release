@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CreateCommentResponse {
-    private Long commentId;
+	private Long commentId;
 }

@@ -8,5 +8,5 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 public class UpdateTeamResponse {
-    private Long teamId;
+	private Long teamId;
 }

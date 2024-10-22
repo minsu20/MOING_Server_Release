@@ -1,20 +1,32 @@
 package com.moing.backend.domain.board.domain.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.BatchSize;
+
 import com.moing.backend.domain.board.application.dto.request.UpdateBoardRequest;
 import com.moing.backend.domain.boardComment.domain.entity.BoardComment;
 import com.moing.backend.domain.boardRead.domain.entity.BoardRead;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.domain.teamMember.domain.entity.TeamMember;
 import com.moing.backend.global.entity.BaseTimeEntity;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Builder
@@ -22,65 +34,63 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class Board extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "board_id")
-    private Long boardId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "board_id")
+	private Long boardId;
 
-    private boolean isLeader; /*작성자 소모임장유무*/
+	private boolean isLeader; /*작성자 소모임장유무*/
 
+	@Column(nullable = false, length = 30)
+	private String title;
 
-    @Column(nullable = false, length = 30)
-    private String title;
+	@Column(nullable = false, length = 300)
+	private String content;
 
-    @Column(nullable = false, length = 300)
-    private String content;
+	private boolean isNotice;
 
-    private boolean isNotice;
+	//반정규화 -> 댓글 개수
+	private Integer commentNum;
 
-    //반정규화 -> 댓글 개수
-    private Integer commentNum;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "team_member_id")
+	private TeamMember teamMember;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_member_id")
-    private TeamMember teamMember;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "team_id")
+	private Team team;
 
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+	private List<BoardRead> boardReads = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "team_id")
-    private Team team;
+	@BatchSize(size = 10)
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+	private List<BoardComment> boardComments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<BoardRead> boardReads = new ArrayList<>();
+	public void incrComNum() {
+		this.commentNum++;
+	}
 
-    @BatchSize(size=10)
-    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-    private List<BoardComment> boardComments = new ArrayList<>();
+	public void decrComNum() {
+		this.commentNum--;
+	}
 
-    public void incrComNum() {
-        this.commentNum++;
-    }
+	public void updateBoard(UpdateBoardRequest updateBoardRequest) {
+		this.title = updateBoardRequest.getTitle();
+		this.content = updateBoardRequest.getContent();
+		this.isNotice = updateBoardRequest.getIsNotice();
+	}
 
-    public void decrComNum() {
-        this.commentNum--;
-    }
+	//==연관관계 메서드 ==//
+	public void updateTeamMember(TeamMember teamMember) {
+		this.teamMember = teamMember;
+	}
 
-    public void updateBoard(UpdateBoardRequest updateBoardRequest){
-        this.title= updateBoardRequest.getTitle();
-        this.content= updateBoardRequest.getContent();
-        this.isNotice= updateBoardRequest.getIsNotice();
-    }
+	public void updateTeam(Team team) {
+		this.team = team;
+	}
 
-    //==연관관계 메서드 ==//
-    public void updateTeamMember(TeamMember teamMember) {
-        this.teamMember = teamMember;
-    }
-
-    public void updateTeam(Team team) {
-        this.team = team;
-    }
-
-    public String getWriterNickName() {
-        return teamMember.getMemberNickName();
-    }
+	public String getWriterNickName() {
+		return teamMember.getMemberNickName();
+	}
 }

@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class NewUploadInfo {
 
-    private String fcmToken;
-    private Long memberId;
-    private boolean isNewUploadPush;
-    private boolean isSignOut;
+	private String fcmToken;
+	private Long memberId;
+	private boolean isNewUploadPush;
+	private boolean isSignOut;
 
 }

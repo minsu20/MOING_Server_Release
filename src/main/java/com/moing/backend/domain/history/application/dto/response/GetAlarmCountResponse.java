@@ -9,5 +9,5 @@ import lombok.Getter;
 @Builder
 public class GetAlarmCountResponse {
 
-    private String count;
+	private String count;
 }

@@ -1,12 +1,13 @@
 package com.moing.backend.domain.auth.exception;
 
-import com.moing.backend.global.response.ErrorCode;
 import org.springframework.http.HttpStatus;
 
+import com.moing.backend.global.response.ErrorCode;
+
 public class AccountAlreadyExistedException extends AuthException {
-    public AccountAlreadyExistedException() {
-        super(ErrorCode.ACCOUNT_ALREADY_EXIST,
-                HttpStatus.UNAUTHORIZED);
-    }
+	public AccountAlreadyExistedException() {
+		super(ErrorCode.ACCOUNT_ALREADY_EXIST,
+			HttpStatus.UNAUTHORIZED);
+	}
 }
 

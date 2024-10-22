@@ -10,22 +10,23 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 public class GatherSingleMissionRes {
-    private Long missionId;
-    private Long teamId;
-    private String teamName;
-    private String missionTitle;
-    private String dueTo;
-    private String status;
-    private String done;
-    private String total;
+	private Long missionId;
+	private Long teamId;
+	private String teamName;
+	private String missionTitle;
+	private String dueTo;
+	private String status;
+	private String done;
+	private String total;
 
-    public GatherSingleMissionRes(Long missionId, Long teamId, String teamName, String missionTitle, String dueTo, String status, String total) {
-        this.missionId = missionId;
-        this.teamId = teamId;
-        this.teamName = teamName;
-        this.missionTitle = missionTitle;
-        this.dueTo = dueTo;
-        this.status = status;
-        this.total = total;
-    }
+	public GatherSingleMissionRes(Long missionId, Long teamId, String teamName, String missionTitle, String dueTo,
+		String status, String total) {
+		this.missionId = missionId;
+		this.teamId = teamId;
+		this.teamName = teamName;
+		this.missionTitle = missionTitle;
+		this.dueTo = dueTo;
+		this.status = status;
+		this.total = total;
+	}
 }

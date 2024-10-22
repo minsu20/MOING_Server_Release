@@ -1,22 +1,23 @@
 package com.moing.backend.domain.mypage.domain.service;
 
+import javax.transaction.Transactional;
+
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
 import com.moing.backend.domain.mypage.domain.entity.Feedback;
 import com.moing.backend.domain.mypage.domain.repository.FeedbackRepository;
 import com.moing.backend.global.annotation.DomainService;
-import lombok.RequiredArgsConstructor;
 
-import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @DomainService
 @RequiredArgsConstructor
 public class FeedbackSaveService {
-    private final FeedbackRepository feedbackRepository;
+	private final FeedbackRepository feedbackRepository;
 
-    @Transactional
-    public void saveFeedback(Member member, WithdrawRequest withdrawRequest){
-        Feedback feedback=new Feedback(member.getMemberId(), withdrawRequest.getReason());
-        feedbackRepository.save(feedback);
-    }
+	@Transactional
+	public void saveFeedback(Member member, WithdrawRequest withdrawRequest) {
+		Feedback feedback = new Feedback(member.getMemberId(), withdrawRequest.getReason());
+		feedbackRepository.save(feedback);
+	}
 }

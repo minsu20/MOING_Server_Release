@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class GetMyPageTeamBlock {
-    private Long teamId;
-    private String teamName;
-    private String category;
-    private String profileImgUrl;
+	private Long teamId;
+	private String teamName;
+	private String category;
+	private String profileImgUrl;
 }

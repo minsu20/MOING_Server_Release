@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class GetProfileResponse {
-    private String profileImage;
-    private String nickName;
-    private String introduction;
+	private String profileImage;
+	private String nickName;
+	private String introduction;
 }

@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum StrategyCategory {
 
-    BCOMMENT("boardCommentReportStrategy"),
-    BOARD("boardReportStrategy"),
-    MISSION("missionArchiveReportStrategy"),
-    MCOMMENT("missionCommentReportStrategy");
+	BCOMMENT("boardCommentReportStrategy"),
+	BOARD("boardReportStrategy"),
+	MISSION("missionArchiveReportStrategy"),
+	MCOMMENT("missionCommentReportStrategy");
 
-    private final String strategyName;
+	private final String strategyName;
 }

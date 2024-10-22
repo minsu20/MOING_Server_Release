@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class MissionArchiveHeartReq {
-    private Long archiveId;
-    private String heartStatus;
+	private Long archiveId;
+	private String heartStatus;
 }

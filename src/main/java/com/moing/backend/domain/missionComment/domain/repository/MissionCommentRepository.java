@@ -1,15 +1,15 @@
 package com.moing.backend.domain.missionComment.domain.repository;
 
-import com.moing.backend.domain.missionComment.domain.entity.MissionComment;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Optional;
+import com.moing.backend.domain.missionComment.domain.entity.MissionComment;
 
 public interface MissionCommentRepository extends JpaRepository<MissionComment, Long>, MissionCommentCustomRepository {
 
-    Optional<MissionComment> findMissionCommentByMissionCommentId(Long missionCommentId);
+	Optional<MissionComment> findMissionCommentByMissionCommentId(Long missionCommentId);
 
-    void deleteAllMissionCommentsByMissionArchiveId(Long missionArchiveId);
+	void deleteAllMissionCommentsByMissionArchiveId(Long missionArchiveId);
 
 }

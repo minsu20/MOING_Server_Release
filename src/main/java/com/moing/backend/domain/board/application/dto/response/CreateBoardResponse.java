@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class CreateBoardResponse {
-    private Long boardId;
+	private Long boardId;
 }

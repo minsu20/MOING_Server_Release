@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TeamScoreRes {
 
-    private Long score;
-    private Long level;
+	private Long score;
+	private Long level;
 }

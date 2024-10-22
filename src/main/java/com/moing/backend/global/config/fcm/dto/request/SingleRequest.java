@@ -1,6 +1,7 @@
 package com.moing.backend.global.config.fcm.dto.request;
 
 import com.moing.backend.domain.history.domain.entity.AlarmType;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,20 +11,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SingleRequest {
 
-    private String registrationToken;
+	private String registrationToken;
 
-    private String title;
+	private String title;
 
-    private String body;
+	private String body;
 
-    private Long memberId;
+	private Long memberId;
 
-    private String idInfo;
+	private String idInfo;
 
-    private String name;
+	private String name;
 
-    private AlarmType alarmType;
+	private AlarmType alarmType;
 
-    private String path;
+	private String path;
 
 }

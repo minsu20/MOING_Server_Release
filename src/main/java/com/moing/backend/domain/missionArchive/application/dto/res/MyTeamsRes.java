@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class MyTeamsRes {
-    private Long teamId;
-    private String teamName;
+	private Long teamId;
+	private String teamName;
 }

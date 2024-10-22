@@ -1,18 +1,27 @@
 package com.moing.backend.domain.team.domain.entity;
 
-import com.moing.backend.domain.mission.domain.entity.Mission;
-import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
-import com.moing.backend.global.entity.BaseTimeEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+
+import com.moing.backend.domain.mission.domain.entity.Mission;
+import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
+import com.moing.backend.global.entity.BaseTimeEntity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Builder
 @NoArgsConstructor
@@ -21,76 +30,76 @@ import java.util.List;
 @Entity
 public class Team extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "team_id")
-    private Long teamId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "team_id")
+	private Long teamId;
 
-    @Column(nullable = false, length = 10)
-    private String category;
+	@Column(nullable = false, length = 10)
+	private String category;
 
-    @Column(nullable = false, length = 10)
-    private String name;
+	@Column(nullable = false, length = 10)
+	private String name;
 
-    @Column(nullable = false)
-    private String profileImgUrl;
+	@Column(nullable = false)
+	private String profileImgUrl;
 
-    @Column(nullable = false, length = 300)
-    private String introduction;
+	@Column(nullable = false, length = 300)
+	private String introduction;
 
-    @Column(nullable = false, length = 100)
-    private String promise;
+	@Column(nullable = false, length = 100)
+	private String promise;
 
-    @Column(nullable = false)
-    private Long leaderId;
+	@Column(nullable = false)
+	private Long leaderId;
 
-    private String invitationCode;
+	private String invitationCode;
 
-    @Column(nullable = false, length = 16)
-    @Enumerated(EnumType.STRING)
-    private ApprovalStatus approvalStatus;
+	@Column(nullable = false, length = 16)
+	@Enumerated(EnumType.STRING)
+	private ApprovalStatus approvalStatus;
 
-    private LocalDateTime approvalTime;
+	private LocalDateTime approvalTime;
 
-    private boolean isDeleted;
+	private boolean isDeleted;
 
-    private LocalDateTime deletionTime;
+	private LocalDateTime deletionTime;
 
-    private Integer numOfMember; //반정규화
-    private Integer levelOfFire;
+	private Integer numOfMember; //반정규화
+	private Integer levelOfFire;
 
-    @OneToMany(mappedBy = "team")
-    List<Mission> missions = new ArrayList<>();
+	@OneToMany(mappedBy = "team")
+	List<Mission> missions = new ArrayList<>();
 
-    public void approveTeam() {
-        this.approvalStatus = ApprovalStatus.APPROVAL;
-        this.approvalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
-    }
+	public void approveTeam() {
+		this.approvalStatus = ApprovalStatus.APPROVAL;
+		this.approvalTime = LocalDateTime.now(ZoneId.of("Asia/Seoul")).withNano(0);
+	}
 
-    public void rejectTeam() {
-        this.approvalStatus = ApprovalStatus.REJECTION;
-    }
+	public void rejectTeam() {
+		this.approvalStatus = ApprovalStatus.REJECTION;
+	}
 
-    public void updateTeam(String name, String introduction, String profileImgUrl) {
-        this.name = name;
-        this.introduction = introduction;
-        this.profileImgUrl = profileImgUrl;
-    }
+	public void updateTeam(String name, String introduction, String profileImgUrl) {
+		this.name = name;
+		this.introduction = introduction;
+		this.profileImgUrl = profileImgUrl;
+	}
 
-    public void deleteTeam() {
-        this.isDeleted=true;
-        this.deletionTime = LocalDateTime.now().withNano(0);
-    }
+	public void deleteTeam() {
+		this.isDeleted = true;
+		this.deletionTime = LocalDateTime.now().withNano(0);
+	}
 
-    public void addTeamMember(){
-        numOfMember++;
-    }
+	public void addTeamMember() {
+		numOfMember++;
+	}
 
-    public void deleteTeamMember(){
-        numOfMember--;
-    }
+	public void deleteTeamMember() {
+		numOfMember--;
+	}
 
-    public void updateLevelOfFire(Integer level) {
-        this.levelOfFire = level;
-    }
+	public void updateLevelOfFire(Integer level) {
+		this.levelOfFire = level;
+	}
 }

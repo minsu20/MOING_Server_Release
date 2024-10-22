@@ -1,6 +1,10 @@
 package com.moing.backend.domain.missionArchive.application.dto.res;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @ToString
 @AllArgsConstructor
@@ -8,6 +12,6 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 public class MyArchiveStatus {
-    private boolean end;
-    private String status;
+	private boolean end;
+	private String status;
 }

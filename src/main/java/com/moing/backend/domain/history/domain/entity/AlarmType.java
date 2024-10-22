@@ -4,10 +4,10 @@ import lombok.Getter;
 
 @Getter
 public enum AlarmType {
-    NEW_UPLOAD,
-    FIRE,
-    REMIND,
-    APPROVE_TEAM,
-    REJECT_TEAM,
-    COMMENT
+	NEW_UPLOAD,
+	FIRE,
+	REMIND,
+	APPROVE_TEAM,
+	REJECT_TEAM,
+	COMMENT
 }

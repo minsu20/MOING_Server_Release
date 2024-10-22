@@ -10,11 +10,11 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 public class SingleMissionBoardRes {
-    private Long missionId;
-    private String dueTo; // 날짜
-    private String title;
-    private String status;
-    private String missionType;
-    private Boolean isRead;
+	private Long missionId;
+	private String dueTo; // 날짜
+	private String title;
+	private String status;
+	private String missionType;
+	private Boolean isRead;
 
 }

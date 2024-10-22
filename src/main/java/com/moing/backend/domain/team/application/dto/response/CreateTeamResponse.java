@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateTeamResponse {
-    private Long teamId;
+	private Long teamId;
 }

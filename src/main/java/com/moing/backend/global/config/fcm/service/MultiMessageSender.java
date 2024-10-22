@@ -1,21 +1,34 @@
 package com.moing.backend.global.config.fcm.service;
 
-import com.google.firebase.messaging.*;
-import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
-import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
-import com.moing.backend.global.config.fcm.dto.response.MultiResponse;
-import com.moing.backend.global.config.fcm.exception.ExceptionHandler;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.transaction.Transactional;
+
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
+import org.springframework.stereotype.Service;
+
+import com.google.firebase.messaging.AndroidConfig;
+import com.google.firebase.messaging.AndroidNotification;
+import com.google.firebase.messaging.ApnsConfig;
+import com.google.firebase.messaging.Aps;
+import com.google.firebase.messaging.ApsAlert;
+import com.google.firebase.messaging.BatchResponse;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.MulticastMessage;
+import com.google.firebase.messaging.Notification;
+import com.google.firebase.messaging.SendResponse;
+import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
+import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
+import com.moing.backend.global.config.fcm.dto.response.MultiResponse;
+import com.moing.backend.global.config.fcm.exception.ExceptionHandler;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
@@ -23,78 +36,76 @@ import java.util.Map;
 @Slf4j
 public class MultiMessageSender implements MessageSender<MultiRequest, MultiResponse> {
 
-    private final FirebaseMessaging firebaseMessaging;
+	private final FirebaseMessaging firebaseMessaging;
 
-    @Override
-    @Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
-    public void send(MultiRequest request) {
+	@Override
+	@Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	public void send(MultiRequest request) {
 
+		List<String> fcmTokens = AlarmHistoryMapper.getFcmTokens(request.getMemberIdAndTokens());
+		Notification notification = Notification.builder()
+			.setTitle(request.getTitle())
+			.setBody(request.getBody())
+			.build();
 
-        List<String> fcmTokens = AlarmHistoryMapper.getFcmTokens(request.getMemberIdAndTokens());
-        Notification notification = Notification.builder()
-                .setTitle(request.getTitle())
-                .setBody(request.getBody())
-                .build();
+		// Android Configuration
+		AndroidConfig androidConfig = AndroidConfig.builder()
+			.setPriority(AndroidConfig.Priority.HIGH)
+			.setNotification(AndroidNotification.builder()
+				.setChannelId("FCM_Channel")
+				.setTitle(request.getTitle())
+				.setBody(request.getBody())
+				.build())
+			.build();
 
-        // Android Configuration
-        AndroidConfig androidConfig = AndroidConfig.builder()
-                .setPriority(AndroidConfig.Priority.HIGH)
-                .setNotification(AndroidNotification.builder()
-                        .setChannelId("FCM_Channel")
-                        .setTitle(request.getTitle())
-                        .setBody(request.getBody())
-                        .build())
-                .build();
+		// APNs Configuration
+		ApnsConfig apnsConfig = ApnsConfig.builder()
+			.setAps(Aps.builder()
+				.setCategory("YOUR_CATEGORY") // Replace with your category
+				.setAlert(ApsAlert.builder()
+					.setTitle(request.getTitle())
+					.setBody(request.getBody())
+					.build())
+				.build())
+			.build();
 
-        // APNs Configuration
-        ApnsConfig apnsConfig = ApnsConfig.builder()
-                .setAps(Aps.builder()
-                        .setCategory("YOUR_CATEGORY") // Replace with your category
-                        .setAlert(ApsAlert.builder()
-                                .setTitle(request.getTitle())
-                                .setBody(request.getBody())
-                                .build())
-                        .build())
-                .build();
+		Map<String, String> additionalData = new HashMap<>();
+		additionalData.put("path", request.getPath());
+		additionalData.put("idInfo", request.getIdInfo());
 
-        Map<String, String> additionalData = new HashMap<>();
-        additionalData.put("path", request.getPath());
-        additionalData.put("idInfo", request.getIdInfo());
+		MulticastMessage message = MulticastMessage.builder()
+			.addAllTokens(fcmTokens)
+			.setNotification(notification)
+			.setAndroidConfig(androidConfig) // Applying Android configuration
+			.setApnsConfig(apnsConfig) // Applying APNs configuration
+			.putAllData(additionalData)
+			.build();
 
-        MulticastMessage message = MulticastMessage.builder()
-                .addAllTokens(fcmTokens)
-                .setNotification(notification)
-                .setAndroidConfig(androidConfig) // Applying Android configuration
-                .setApnsConfig(apnsConfig) // Applying APNs configuration
-                .putAllData(additionalData)
-                .build();
+		try {
+			BatchResponse response = firebaseMessaging.sendMulticast(message);
 
-        try {
-            BatchResponse response = firebaseMessaging.sendMulticast(message);
+			List<String> failedTokens = new ArrayList<>();
 
+			if (response.getFailureCount() > 0) {
+				List<SendResponse> responses = response.getResponses();
 
-            List<String> failedTokens = new ArrayList<>();
+				List<Long> memberIds = AlarmHistoryMapper.getMemberIds(request.getMemberIdAndTokens());
 
-            if (response.getFailureCount() > 0) {
-                List<SendResponse> responses = response.getResponses();
+				for (int i = 0; i < responses.size(); i++) {
+					if (!responses.get(i).isSuccessful()) {
+						// Add the failed tokens to the list
+						failedTokens.add(fcmTokens.get(i));
+					}
+				}
+			}
 
-                List<Long> memberIds = AlarmHistoryMapper.getMemberIds(request.getMemberIdAndTokens());
+			String messageString = String.format("%d messages were sent successfully.", response.getSuccessCount());
 
-                for (int i = 0; i < responses.size(); i++) {
-                    if (!responses.get(i).isSuccessful()) {
-                        // Add the failed tokens to the list
-                        failedTokens.add(fcmTokens.get(i));
-                    }
-                }
-            }
+			new MultiResponse(messageString, failedTokens);
 
-            String messageString = String.format("%d messages were sent successfully.", response.getSuccessCount());
-
-            new MultiResponse(messageString, failedTokens);
-
-        } catch (FirebaseMessagingException e) {
-            throw ExceptionHandler.handleFirebaseMessagingException(e);
-        }
-    }
+		} catch (FirebaseMessagingException e) {
+			throw ExceptionHandler.handleFirebaseMessagingException(e);
+		}
+	}
 
 }

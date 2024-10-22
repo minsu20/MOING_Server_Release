@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TeamCreateEvent {
 
-    private final String teamName;
-    private final Long leaderId;
+	private final String teamName;
+	private final Long leaderId;
 
 }

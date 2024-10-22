@@ -1,28 +1,30 @@
 package com.moing.backend.domain.block.domain.service;
 
+import java.util.List;
+
 import com.moing.backend.domain.block.domain.entity.Block;
 import com.moing.backend.domain.block.domain.repository.BlockRepository;
 import com.moing.backend.domain.block.exception.NotFoundBlockException;
 import com.moing.backend.domain.report.application.dto.BlockMemberRes;
 import com.moing.backend.global.annotation.DomainService;
-import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @DomainService
 @RequiredArgsConstructor
 public class BlockQueryService {
 
-    private final BlockRepository blockRepository;
+	private final BlockRepository blockRepository;
 
-    public List<Long> getBlockLists(Long memberId) {
-        return blockRepository.getMyBlockList(memberId).orElseThrow(NotFoundBlockException::new);
-    }
-    public List<BlockMemberRes> getBlockInfoLists(Long memberId) {
-        return blockRepository.getMyBlockInfoList(memberId).orElseThrow(NotFoundBlockException::new);
-    }
+	public List<Long> getBlockLists(Long memberId) {
+		return blockRepository.getMyBlockList(memberId).orElseThrow(NotFoundBlockException::new);
+	}
 
-    public Block getBlock(Long memberId, Long targetId) {
-        return blockRepository.getBlockById(memberId, targetId).orElseThrow(NotFoundBlockException::new);
-    }
+	public List<BlockMemberRes> getBlockInfoLists(Long memberId) {
+		return blockRepository.getMyBlockInfoList(memberId).orElseThrow(NotFoundBlockException::new);
+	}
+
+	public Block getBlock(Long memberId, Long targetId) {
+		return blockRepository.getBlockById(memberId, targetId).orElseThrow(NotFoundBlockException::new);
+	}
 }

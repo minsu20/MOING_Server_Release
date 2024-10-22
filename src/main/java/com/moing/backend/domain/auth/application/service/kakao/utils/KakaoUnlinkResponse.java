@@ -4,5 +4,5 @@ import lombok.Getter;
 
 @Getter
 public class KakaoUnlinkResponse {
-    private String id;
+	private String id;
 }

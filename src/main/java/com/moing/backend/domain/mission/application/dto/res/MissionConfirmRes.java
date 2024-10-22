@@ -8,5 +8,5 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class MissionConfirmRes {
-    private Long missionId;
+	private Long missionId;
 }

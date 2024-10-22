@@ -7,15 +7,14 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum PagePath {
 
-    NOTICE_PATH("/post/detail"),
+	NOTICE_PATH("/post/detail"),
 
-    MISSION_PATH("/missions/prove"),
+	MISSION_PATH("/missions/prove"),
 
-    MISSION_ALL_PTAH("/missions"),
+	MISSION_ALL_PTAH("/missions"),
 
-    HOME_PATH("/home");
+	HOME_PATH("/home");
 
-
-    private final String value;
+	private final String value;
 
 }

@@ -11,23 +11,23 @@ import lombok.NoArgsConstructor;
 @Getter
 public class GetBoardDetailResponse {
 
-    private Long boardId;
+	private Long boardId;
 
-    private String writerNickName;
+	private String writerNickName;
 
-    private Boolean writerIsLeader;
+	private Boolean writerIsLeader;
 
-    private String writerProfileImage;
+	private String writerProfileImage;
 
-    private String title;
+	private String title;
 
-    private String content;
+	private String content;
 
-    private String createdDate;
+	private String createdDate;
 
-    private Boolean isWriter;
+	private Boolean isWriter;
 
-    private Boolean isNotice;
+	private Boolean isNotice;
 
-    private Long makerId;
+	private Long makerId;
 }

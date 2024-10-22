@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MissionHeartRes {
-    private Long missionArchiveId;
-    private String missionHeartStatus;
-    private int hearts;
+	private Long missionArchiveId;
+	private String missionHeartStatus;
+	private int hearts;
 }

@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MissionArchiveStatusRes {
-    private String total;
-    private String done;
+	private String total;
+	private String done;
 }
