@@ -54,3 +54,4 @@ data.sql
 firebase-key.json
 apple-key.p8
 logs/
+src/main/resources/application-prod.yml
