@@ -18,7 +18,7 @@ public class MemberSaveService {
 	private final MemberRepository memberRepository;
 
 	@Transactional
-	public Member saveMember(Member member) {
+	public Member saveOrUpdateMemberWithSignIn(Member member) {
 		Optional<Member> findMember = memberRepository.findNotDeletedBySocialId(member.getSocialId());
 		if (findMember.isEmpty()) {
 			return memberRepository.save(member);

@@ -11,15 +11,15 @@ import com.moing.backend.domain.member.domain.service.MemberSaveService;
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class MemberAuthUseCase {
 
 	private final MemberSaveService memberSaveService;
 
+	@Transactional
 	public Member auth(String fcmToken, Member member, String providerInfo) {
 		member.updateFcmToken(fcmToken);
-		Member signInMember = memberSaveService.saveMember(member);
+		Member signInMember = memberSaveService.saveOrUpdateMemberWithSignIn(member);
 		checkRegistration(signInMember, providerInfo);
 		return signInMember;
 	}
