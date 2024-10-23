@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.springframework.stereotype.Service;
 
 import com.moing.backend.domain.auth.application.service.WithdrawProvider;
-import com.moing.backend.domain.auth.application.service.kakao.utils.KakaoClient;
 
 import lombok.RequiredArgsConstructor;
 

@@ -34,7 +34,6 @@ public class GoogleSignInUseCase implements SignInProvider {
 
 		if (googleUserResponse != null) {
 			googleTokenUseCase.verifyAccessToken(googleUserResponse.getAud());
-			googleUserResponse.adaptResponse();
 			return MemberMapper.createGoogleMember(googleUserResponse);
 		}
 		throw new TokenInvalidException();

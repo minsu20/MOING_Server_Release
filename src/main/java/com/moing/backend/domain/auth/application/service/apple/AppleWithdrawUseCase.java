@@ -11,8 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.moing.backend.domain.auth.application.service.WithdrawProvider;
-import com.moing.backend.domain.auth.application.service.apple.utils.AppleClient;
-import com.moing.backend.domain.auth.application.service.apple.utils.AppleToken;
 import com.moing.backend.global.config.sns.AppleConfig;
 
 import io.jsonwebtoken.Jwts;
