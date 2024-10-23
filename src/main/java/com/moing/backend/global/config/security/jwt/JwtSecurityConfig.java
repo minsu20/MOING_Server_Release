@@ -13,13 +13,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurityFilterChain, HttpSecurity> {
 
-	private final TokenUtil tokenUtil;
+	private final TokenManager tokenManager;
 
 	private final MemberGetService memberQueryService;
 
 	@Override
 	public void configure(HttpSecurity http) {
-		JwtAuthFilter customFilter = new JwtAuthFilter(tokenUtil, memberQueryService);
+		JwtAuthFilter customFilter = new JwtAuthFilter(tokenManager, memberQueryService);
 		//UsernamePasswordAuthenticationFilter 앞에 필터로 JwtFilter 추가
 		http.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
 	}

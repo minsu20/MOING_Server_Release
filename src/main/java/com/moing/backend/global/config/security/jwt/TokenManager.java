@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class TokenUtil implements InitializingBean {
+public class TokenManager implements InitializingBean {
 
 	private static final String ADDITIONAL_INFO = "isAdditionalInfoProvided";
 	private final RedisUtil redisUtil;

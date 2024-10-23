@@ -6,7 +6,7 @@ import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.filter.JwtAccessDeniedHandler;
 import com.moing.backend.global.config.security.filter.JwtAuthenticationEntryPoint;
-import com.moing.backend.global.config.security.jwt.TokenUtil;
+import com.moing.backend.global.config.security.jwt.TokenManager;
 import com.moing.backend.global.config.security.util.AuthenticationUtil;
 import com.moing.backend.global.log.aop.LogTrace;
 import org.junit.jupiter.api.BeforeEach;
@@ -44,7 +44,7 @@ public class CommonControllerTest {
     protected ObjectMapper objectMapper;
 
     @MockBean
-    public TokenUtil tokenUtil;
+    public TokenManager tokenManager;
 
     @MockBean
     public JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;

@@ -15,7 +15,7 @@ import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.filter.JwtAccessDeniedHandler;
 import com.moing.backend.global.config.security.filter.JwtAuthenticationEntryPoint;
 import com.moing.backend.global.config.security.jwt.JwtSecurityConfig;
-import com.moing.backend.global.config.security.jwt.TokenUtil;
+import com.moing.backend.global.config.security.jwt.TokenManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	private final TokenUtil tokenUtil;
+	private final TokenManager tokenManager;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 	private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 	private final MemberGetService memberQueryService;
@@ -70,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.anyRequest()
 			.authenticated()
 			.and()
-			.apply(new JwtSecurityConfig(tokenUtil, memberQueryService));
+			.apply(new JwtSecurityConfig(tokenManager, memberQueryService));
 	}
 
 	@Bean

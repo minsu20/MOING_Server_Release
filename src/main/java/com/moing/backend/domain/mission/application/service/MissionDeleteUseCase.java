@@ -10,7 +10,7 @@ import com.moing.backend.domain.mission.domain.service.MissionDeleteService;
 import com.moing.backend.domain.mission.domain.service.MissionQueryService;
 import com.moing.backend.domain.mission.exception.NoAccessDeleteMission;
 import com.moing.backend.domain.team.domain.entity.Team;
-import com.moing.backend.global.utils.BaseService;
+import com.moing.backend.global.service.BaseService;
 
 import lombok.RequiredArgsConstructor;
 

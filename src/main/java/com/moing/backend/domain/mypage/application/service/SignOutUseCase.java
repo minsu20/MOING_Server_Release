@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
-import com.moing.backend.global.config.security.jwt.TokenUtil;
+import com.moing.backend.global.config.security.jwt.TokenManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,11 +15,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SignOutUseCase {
 
-	private final TokenUtil tokenUtil;
+	private final TokenManager tokenManager;
 	private final MemberGetService memberGetService;
 
 	public void signOut(String socialId) {
-		tokenUtil.expireRefreshToken(socialId);
+		tokenManager.expireRefreshToken(socialId);
 		Member member = memberGetService.getMemberBySocialId(socialId);
 		member.signOut();
 	}

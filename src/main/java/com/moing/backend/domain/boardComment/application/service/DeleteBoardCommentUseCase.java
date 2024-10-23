@@ -9,7 +9,7 @@ import com.moing.backend.domain.boardComment.domain.service.BoardCommentDeleteSe
 import com.moing.backend.domain.boardComment.domain.service.BoardCommentGetService;
 import com.moing.backend.domain.boardComment.exception.NotAuthByBoardCommentException;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
-import com.moing.backend.global.utils.BaseBoardService;
+import com.moing.backend.global.service.BaseBoardService;
 
 import lombok.RequiredArgsConstructor;
 

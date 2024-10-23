@@ -17,7 +17,7 @@ import com.moing.backend.domain.mission.exception.NoMoreCreateMission;
 import com.moing.backend.domain.missionRead.application.service.CreateMissionReadUseCase;
 import com.moing.backend.domain.team.domain.entity.Team;
 import com.moing.backend.global.response.BaseServiceResponse;
-import com.moing.backend.global.utils.BaseService;
+import com.moing.backend.global.service.BaseService;
 
 import lombok.RequiredArgsConstructor;
 

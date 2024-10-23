@@ -8,7 +8,7 @@ import com.moing.backend.domain.board.application.dto.request.UpdateBoardRequest
 import com.moing.backend.domain.board.application.dto.response.UpdateBoardResponse;
 import com.moing.backend.domain.board.exception.NotAuthByBoardException;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
-import com.moing.backend.global.utils.BaseBoardService;
+import com.moing.backend.global.service.BaseBoardService;
 
 import lombok.RequiredArgsConstructor;
 

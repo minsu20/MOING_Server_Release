@@ -12,7 +12,7 @@ import com.moing.backend.domain.board.domain.service.BoardSaveService;
 import com.moing.backend.domain.boardRead.application.service.CreateBoardReadUseCase;
 import com.moing.backend.domain.team.application.service.CheckLeaderUseCase;
 import com.moing.backend.global.response.BaseServiceResponse;
-import com.moing.backend.global.utils.BaseService;
+import com.moing.backend.global.service.BaseService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.moing.backend.domain.auth.application.service.google.utils;
+package com.moing.backend.domain.auth.application.service.google;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

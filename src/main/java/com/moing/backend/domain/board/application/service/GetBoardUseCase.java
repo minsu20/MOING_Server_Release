@@ -11,7 +11,7 @@ import com.moing.backend.domain.boardRead.application.service.CreateBoardReadUse
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
-import com.moing.backend.global.utils.BaseBoardService;
+import com.moing.backend.global.service.BaseBoardService;
 
 import lombok.RequiredArgsConstructor;
 

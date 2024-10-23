@@ -13,7 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
 import com.moing.backend.global.config.security.jwt.JwtExceptionList;
-import com.moing.backend.global.config.security.jwt.TokenUtil;
+import com.moing.backend.global.config.security.jwt.TokenManager;
 import com.moing.backend.global.config.security.util.AuthenticationUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
 	public static final String AUTHORIZATION_HEADER = "Authorization";
-	private final TokenUtil tokenUtil;
+	private final TokenManager tokenManager;
 	private final MemberGetService memberQueryService;
 
 	@Override
@@ -37,11 +37,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 		String token = resolveToken(request);
 		String requestURI = request.getRequestURI();
 		try {
-			if (StringUtils.hasText(token) && tokenUtil.verifyToken(token)) {
-				boolean isAdditionalInfoProvided = tokenUtil.getAdditionalInfoProvided(token);
+			if (StringUtils.hasText(token) && tokenManager.verifyToken(token)) {
+				boolean isAdditionalInfoProvided = tokenManager.getAdditionalInfoProvided(token);
 				if (isAdditionalInfoProvided) {
 					// 토큰 파싱해서 socialId 정보 가져오기
-					String socialId = tokenUtil.getSocialId(token);
+					String socialId = tokenManager.getSocialId(token);
 					Member member = memberQueryService.getMemberBySocialId(socialId);
 
 					// 이메일로 Authentication 정보 생성

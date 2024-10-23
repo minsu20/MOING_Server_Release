@@ -11,7 +11,7 @@ import com.moing.backend.domain.comment.application.dto.request.CreateCommentReq
 import com.moing.backend.domain.comment.application.dto.response.CreateCommentResponse;
 import com.moing.backend.domain.team.application.service.CheckLeaderUseCase;
 import com.moing.backend.global.response.BaseBoardServiceResponse;
-import com.moing.backend.global.utils.BaseBoardService;
+import com.moing.backend.global.service.BaseBoardService;
 
 import lombok.RequiredArgsConstructor;
 

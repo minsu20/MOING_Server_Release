@@ -8,14 +8,13 @@ import com.moing.backend.domain.member.domain.entity.Member;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service("appleSignIn")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AppleSignInUseCase implements SignInProvider {
 
 	private final AppleTokenUseCase appleTokenUseCase;
-	private final MemberMapper memberMapper;
 
 	public Member getUserData(String identityToken) {
 		Jws<Claims> oidcTokenJws = appleTokenUseCase.sigVerificationAndGetJws(identityToken);

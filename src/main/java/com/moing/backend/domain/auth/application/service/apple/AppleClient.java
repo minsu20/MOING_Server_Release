@@ -1,4 +1,4 @@
-package com.moing.backend.domain.auth.application.service.apple.utils;
+package com.moing.backend.domain.auth.application.service.apple;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;

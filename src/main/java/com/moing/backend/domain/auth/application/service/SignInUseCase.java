@@ -1,5 +1,7 @@
 package com.moing.backend.domain.auth.application.service;
 
+import static com.moing.backend.domain.member.domain.constant.RegistrationStatus.*;
+
 import java.util.Map;
 
 import javax.transaction.Transactional;
@@ -8,25 +10,24 @@ import org.springframework.stereotype.Service;
 
 import com.moing.backend.domain.auth.application.dto.request.SignInRequest;
 import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
-import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberGetService;
-import com.moing.backend.global.config.security.jwt.TokenUtil;
+import com.moing.backend.global.config.security.jwt.TokenManager;
 import com.moing.backend.global.config.security.util.AuthenticationUtil;
 import com.moing.backend.global.response.TokenInfoResponse;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 public class SignInUseCase {
 
 	private final MemberAuthUseCase internalAuthService;
-	private final TokenUtil tokenUtil;
+	private final TokenManager tokenManager;
 	private final Map<String, SignInProvider> signInProviders;
 	private final MemberGetService memberGetService;
 
+	@Transactional
 	public SignInResponse signIn(SignInRequest signInRequest, String providerInfo) {
 		//1. 사용자 정보 가져오기
 		Member member = getUserDataFromPlatform(signInRequest.getSocialToken(), providerInfo);
@@ -35,10 +36,10 @@ public class SignInUseCase {
 		//3. security 처리
 		AuthenticationUtil.makeAuthentication(authenticatedMember);
 		//4. token 만들기
-		TokenInfoResponse tokenResponse = tokenUtil.createToken(authenticatedMember,
-			authenticatedMember.getRegistrationStatus().equals(RegistrationStatus.COMPLETED));
+		TokenInfoResponse tokenResponse = tokenManager.createToken(authenticatedMember,
+			authenticatedMember.getRegistrationStatus() == COMPLETED);
 		//5. refresh token 저장
-		tokenUtil.storeRefreshToken(authenticatedMember.getSocialId(), tokenResponse);
+		tokenManager.storeRefreshToken(authenticatedMember.getSocialId(), tokenResponse);
 
 		return SignInResponse.from(tokenResponse, authenticatedMember.getRegistrationStatus());
 	}
@@ -51,6 +52,7 @@ public class SignInUseCase {
 		return signInProvider.getUserData(accessToken);
 	}
 
+	@Transactional
 	public SignInResponse testSignIn(String fcmToken, String socialId, String providerInfo) {
 		//1. 사용자 정보 가져오기
 		Member member = memberGetService.getMemberBySocialId(socialId);
@@ -59,10 +61,10 @@ public class SignInUseCase {
 		//3. security 처리
 		AuthenticationUtil.makeAuthentication(authenticatedMember);
 		//4. token 만들기
-		TokenInfoResponse tokenResponse = tokenUtil.createToken(authenticatedMember,
-			authenticatedMember.getRegistrationStatus().equals(RegistrationStatus.COMPLETED));
+		TokenInfoResponse tokenResponse = tokenManager.createToken(authenticatedMember,
+			authenticatedMember.getRegistrationStatus().equals(COMPLETED));
 		//5. refresh token 저장
-		tokenUtil.storeRefreshToken(authenticatedMember.getSocialId(), tokenResponse);
+		tokenManager.storeRefreshToken(authenticatedMember.getSocialId(), tokenResponse);
 
 		return SignInResponse.from(tokenResponse, authenticatedMember.getRegistrationStatus());
 	}

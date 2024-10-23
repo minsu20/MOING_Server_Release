@@ -15,7 +15,7 @@ import com.moing.backend.domain.auth.application.dto.response.SignInResponse;
 import com.moing.backend.domain.member.domain.constant.RegistrationStatus;
 import com.moing.backend.domain.member.domain.entity.Member;
 import com.moing.backend.domain.member.domain.service.MemberSaveService;
-import com.moing.backend.global.config.security.jwt.TokenUtil;
+import com.moing.backend.global.config.security.jwt.TokenManager;
 import com.moing.backend.global.response.TokenInfoResponse;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
 	private final MemberSaveService memberSaveService;
-	private final TokenUtil tokenUtil;
+	private final TokenManager tokenManager;
 	private final ObjectMapper objectMapper;
 
 	@Override
@@ -38,15 +38,15 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 		Member member = Member.valueOf(oAuth2User);
 
 		// 회원가입(가입 정보 없는 유저일 때만) 및 로그인
-		Member signInMember = memberSaveService.saveMember(member);
+		Member signInMember = memberSaveService.saveOrUpdateMemberWithSignIn(member);
 
 		// 토큰 생성
-		TokenInfoResponse token = tokenUtil.createToken(signInMember,
+		TokenInfoResponse token = tokenManager.createToken(signInMember,
 			signInMember.getRegistrationStatus().equals(RegistrationStatus.COMPLETED));
 		log.info("{}", token);
 
 		// Redis에 Refresh Token 저장
-		tokenUtil.storeRefreshToken(signInMember.getSocialId(), token);
+		tokenManager.storeRefreshToken(signInMember.getSocialId(), token);
 
 		// Response message 생성
 		writeOauthResponse(response, SignInResponse.from(token, signInMember.getRegistrationStatus()));

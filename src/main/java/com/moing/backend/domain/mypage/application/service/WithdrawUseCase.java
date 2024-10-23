@@ -14,7 +14,7 @@ import com.moing.backend.domain.mypage.application.dto.request.WithdrawRequest;
 import com.moing.backend.domain.mypage.domain.service.FeedbackSaveService;
 import com.moing.backend.domain.mypage.exception.ExistingTeamException;
 import com.moing.backend.domain.team.domain.service.TeamGetService;
-import com.moing.backend.global.config.security.jwt.TokenUtil;
+import com.moing.backend.global.config.security.jwt.TokenManager;
 
 import lombok.RequiredArgsConstructor;
 
@@ -24,7 +24,7 @@ public class WithdrawUseCase {
 
 	private final MemberGetService memberGetService;
 	private final FeedbackSaveService feedbackSaveService;
-	private final TokenUtil tokenUtil;
+	private final TokenManager tokenManager;
 	private final TeamGetService teamGetService;
 	private final Map<String, WithdrawProvider> withdrawProviders;
 
@@ -35,7 +35,7 @@ public class WithdrawUseCase {
 		socialWithdraw(providerInfo, withdrawRequest.getSocialToken());
 		member.deleteMember();
 		feedbackSaveService.saveFeedback(member, withdrawRequest);
-		tokenUtil.expireRefreshToken(socialId);
+		tokenManager.expireRefreshToken(socialId);
 	}
 
 	private void socialWithdraw(String providerInfo, String token) throws IOException {
