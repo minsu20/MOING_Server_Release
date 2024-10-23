@@ -1,9 +1,9 @@
 package com.moing.backend.global.config.fcm.service;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import javax.transaction.Transactional;
 
@@ -16,16 +16,11 @@ import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
 import com.google.firebase.messaging.Aps;
 import com.google.firebase.messaging.ApsAlert;
-import com.google.firebase.messaging.BatchResponse;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.MulticastMessage;
 import com.google.firebase.messaging.Notification;
-import com.google.firebase.messaging.SendResponse;
 import com.moing.backend.domain.history.application.mapper.AlarmHistoryMapper;
 import com.moing.backend.global.config.fcm.dto.request.MultiRequest;
-import com.moing.backend.global.config.fcm.dto.response.MultiResponse;
-import com.moing.backend.global.config.fcm.exception.ExceptionHandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,12 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class MultiMessageSender implements MessageSender<MultiRequest, MultiResponse> {
-
-	private final FirebaseMessaging firebaseMessaging;
+public class MultiMessageSender implements MessageSender<MultiRequest> {
 
 	@Override
-	@Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(value = RuntimeException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public void send(MultiRequest request) {
 
 		List<String> fcmTokens = AlarmHistoryMapper.getFcmTokens(request.getMemberIdAndTokens());
@@ -81,31 +74,16 @@ public class MultiMessageSender implements MessageSender<MultiRequest, MultiResp
 			.putAllData(additionalData)
 			.build();
 
-		try {
-			BatchResponse response = firebaseMessaging.sendMulticast(message);
-
-			List<String> failedTokens = new ArrayList<>();
-
-			if (response.getFailureCount() > 0) {
-				List<SendResponse> responses = response.getResponses();
-
-				List<Long> memberIds = AlarmHistoryMapper.getMemberIds(request.getMemberIdAndTokens());
-
-				for (int i = 0; i < responses.size(); i++) {
-					if (!responses.get(i).isSuccessful()) {
-						// Add the failed tokens to the list
-						failedTokens.add(fcmTokens.get(i));
-					}
-				}
+		CompletableFuture.supplyAsync(() -> {
+			try {
+				return FirebaseMessaging.getInstance().sendEachForMulticastAsync(message).get();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
-
-			String messageString = String.format("%d messages were sent successfully.", response.getSuccessCount());
-
-			new MultiResponse(messageString, failedTokens);
-
-		} catch (FirebaseMessagingException e) {
-			throw ExceptionHandler.handleFirebaseMessagingException(e);
-		}
+		}).exceptionally(throwable -> {
+			log.error("Firebase messaging error occurred", throwable);
+			return null;
+		});
 	}
 
 }

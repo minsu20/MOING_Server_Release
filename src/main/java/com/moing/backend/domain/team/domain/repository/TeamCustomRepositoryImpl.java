@@ -21,6 +21,8 @@ import com.moing.backend.domain.team.application.dto.response.GetLeaderInfoRespo
 import com.moing.backend.domain.team.application.dto.response.GetNewTeamResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamCountResponse;
 import com.moing.backend.domain.team.application.dto.response.GetTeamResponse;
+import com.moing.backend.domain.team.application.dto.response.QGetTeamCountResponse;
+import com.moing.backend.domain.team.application.dto.response.QTeamBlock;
 import com.moing.backend.domain.team.application.dto.response.TeamBlock;
 import com.moing.backend.domain.team.domain.constant.ApprovalStatus;
 import com.moing.backend.domain.team.domain.entity.Team;

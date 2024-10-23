@@ -9,6 +9,10 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
+import com.google.api.core.ApiFuture;
+import com.google.api.core.ApiFutureCallback;
+import com.google.api.core.ApiFutures;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.firebase.messaging.AndroidConfig;
 import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.ApnsConfig;
@@ -19,8 +23,6 @@ import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import com.moing.backend.global.config.fcm.dto.request.SingleRequest;
-import com.moing.backend.global.config.fcm.dto.response.SingleResponse;
-import com.moing.backend.global.config.fcm.exception.ExceptionHandler;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,9 +31,8 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class SingleMessageSender implements MessageSender<SingleRequest, SingleResponse> {
+public class SingleMessageSender implements MessageSender<SingleRequest> {
 
-	private final FirebaseMessaging firebaseMessaging;
 
 	@Override
 	@Retryable(value = FirebaseMessagingException.class, maxAttempts = 3, backoff = @Backoff(delay = 1000))
@@ -74,11 +75,23 @@ public class SingleMessageSender implements MessageSender<SingleRequest, SingleR
 			.putAllData(additionalData)
 			.build();
 
-		try {
-			String response = firebaseMessaging.send(message);
-			new SingleResponse(response);
-		} catch (FirebaseMessagingException e) {
-			throw ExceptionHandler.handleFirebaseMessagingException(e);
-		}
+		ApiFuture<String> future = FirebaseMessaging.getInstance().sendAsync(message);
+
+		ApiFutures.addCallback(
+			future,
+			new ApiFutureCallback<String>() {
+				@Override
+				public void onSuccess(String result) {
+					log.info("Message sent successfully: {}", result);
+				}
+
+				@Override
+				public void onFailure(Throwable t) {
+					log.error("Error sending FCM message", t);
+					throw new RuntimeException(t);
+				}
+			},
+			MoreExecutors.directExecutor() // Direct executor for simplicity, can replace with a custom executor
+		);
 	}
 }
