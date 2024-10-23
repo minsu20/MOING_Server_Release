@@ -4,13 +4,14 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.moing.backend.domain.auth.exception.AppIdInvalidException;
 import com.moing.backend.domain.auth.exception.TokenInvalidException;
 
 import lombok.RequiredArgsConstructor;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class GoogleTokenUseCase {
 

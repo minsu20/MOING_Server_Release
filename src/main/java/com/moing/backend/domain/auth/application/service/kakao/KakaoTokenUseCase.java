@@ -3,6 +3,7 @@ package com.moing.backend.domain.auth.application.service.kakao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.moing.backend.domain.auth.application.dto.response.KakaoAccessTokenResponse;
@@ -13,7 +14,7 @@ import com.moing.backend.global.exception.InternalServerErrorException;
 import lombok.RequiredArgsConstructor;
 import reactor.core.publisher.Mono;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class KakaoTokenUseCase {
 

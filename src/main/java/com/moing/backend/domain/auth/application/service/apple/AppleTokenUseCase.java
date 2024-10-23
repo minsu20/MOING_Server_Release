@@ -9,10 +9,8 @@ import java.security.spec.RSAPublicKeySpec;
 import java.util.Base64;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-import com.moing.backend.domain.auth.application.service.apple.utils.AppleClient;
-import com.moing.backend.domain.auth.application.service.apple.utils.Keys;
 import com.moing.backend.domain.auth.exception.TokenInvalidException;
 import com.moing.backend.global.exception.InternalServerErrorException;
 
@@ -23,7 +21,7 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class AppleTokenUseCase {
 
