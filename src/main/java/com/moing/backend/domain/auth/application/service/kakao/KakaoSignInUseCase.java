@@ -34,7 +34,6 @@ public class KakaoSignInUseCase implements SignInProvider {
 				response -> Mono.error(new InternalServerErrorException("Kakao Internal Server Error")))
 			.bodyToMono(KakaoUserResponse.class)
 			.block();
-		kakaoUserResponse.adaptResponse();
 
 		return MemberMapper.createKakaoMember(kakaoUserResponse);
 	}

@@ -14,16 +14,24 @@ public class MemberMapper {
 
 	public static Member createKakaoMember(KakaoUserResponse kakaoUserResponse) {
 
+		String email = kakaoUserResponse.getKakaoAccount().getEmail();
+
+		if (email.length() > 50)
+			email = email.substring(0, 50);
+
 		return Member.builder()
 			.socialId(SocialProvider.KAKAO + "@" + kakaoUserResponse.getId())
 			.provider(SocialProvider.KAKAO)
-			.email(kakaoUserResponse.getKakaoAccount().getEmail())
+			.email(email)
 			.role(Role.USER)
 			.registrationStatus(RegistrationStatus.UNCOMPLETED)
 			.build();
 	}
 
 	public static Member createAppleMember(String socialId, String email) {
+
+		if (email.length() > 50)
+			email = email.substring(0, 50);
 
 		return Member.builder()
 			.socialId(SocialProvider.APPLE + "@" + socialId)
@@ -35,11 +43,15 @@ public class MemberMapper {
 	}
 
 	public static Member createGoogleMember(GoogleUserResponse googleUserResponse) {
+		String email = googleUserResponse.getEmail();
+
+		if (email.length() > 50)
+			email = email.substring(0, 50);
 
 		return Member.builder()
 			.socialId(SocialProvider.GOOGLE + "@" + googleUserResponse.getSub())
 			.provider(SocialProvider.GOOGLE)
-			.email(googleUserResponse.getEmail())
+			.email(email)
 			.role(Role.USER)
 			.registrationStatus(RegistrationStatus.UNCOMPLETED)
 			.build();
