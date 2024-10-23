@@ -10,11 +10,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class ReissueTokenResponse {
 
-	private String accessToken;
-	private String refreshToken;
+	private final String accessToken;
+	private final String refreshToken;
 
 	public static ReissueTokenResponse from(TokenInfoResponse tokenInfoResponse) {
 		return ReissueTokenResponse.builder()

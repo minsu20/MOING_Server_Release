@@ -5,22 +5,17 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class GoogleUserResponse {
 
-	private String aud;
-	private String sub;
-	private String email;
-	private String name;
-	private String picture;
-
-	public void adaptResponse() {
-		if (email.length() > 50)
-			email = email.substring(0, 50);
-	}
+	private final String aud;
+	private final String sub;
+	private final String email;
+	private final String name;
+	private final String picture;
 }

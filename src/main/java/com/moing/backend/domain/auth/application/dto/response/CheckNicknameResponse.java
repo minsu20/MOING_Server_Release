@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class CheckNicknameResponse {
-	private Boolean isDuplicated;
+	private final Boolean isDuplicated;
 }

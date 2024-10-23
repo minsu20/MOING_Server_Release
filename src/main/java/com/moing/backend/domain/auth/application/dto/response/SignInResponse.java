@@ -11,11 +11,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class SignInResponse {
-	private String accessToken;
-	private String refreshToken;
-	private Boolean registrationStatus;
+	private final String accessToken;
+	private final String refreshToken;
+	private final Boolean registrationStatus;
 
 	public static SignInResponse from(TokenInfoResponse tokenInfoResponse, RegistrationStatus registrationStatus) {
 		return SignInResponse.builder()

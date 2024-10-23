@@ -9,14 +9,13 @@ import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 @Getter
 public class SignInRequest {
 	@NotBlank(message = "socialToken 을 입력해주세요.")
-	private String socialToken;
+	private final String socialToken;
 
 	@NotBlank(message = "fcmToken 을 입력해주세요.")
-	private String fcmToken;
+	private final String fcmToken;
 
 }
 

@@ -9,33 +9,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class KakaoUserResponse {
-	private Long id;
-	private Properties properties;
-	private KakaoAccount kakaoAccount;
+	private final Long id;
+	private final Properties properties;
+	private final KakaoAccount kakaoAccount;
 
 	@Getter
-	@NoArgsConstructor
 	@AllArgsConstructor
 	@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 	public static class Properties {
-		private String nickname;
+		private final String nickname;
 	}
 
 	@Getter
-	@NoArgsConstructor
 	@AllArgsConstructor
 	public static class KakaoAccount {
-		private String email;
-	}
-
-	public void adaptResponse() {
-		if (kakaoAccount.email.length() > 50)
-			kakaoAccount.email = kakaoAccount.email.substring(0, 50);
+		private final String email;
 	}
 
 }
