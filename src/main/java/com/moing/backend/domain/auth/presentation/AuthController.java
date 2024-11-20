@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.moing.backend.domain.auth.application.dto.request.ReissueTokenRequest;
 import com.moing.backend.domain.auth.application.dto.request.SignInRequest;
 import com.moing.backend.domain.auth.application.dto.request.SignUpRequest;
 import com.moing.backend.domain.auth.application.dto.request.TestRequest;
@@ -69,10 +70,10 @@ public class AuthController {
 	 * [GET] api/auth/reissue
 	 * 작성자 : 김민수
 	 */
-	@GetMapping("/reissue")
+	@PostMapping("/reissue")
 	public ResponseEntity<SuccessResponse<ReissueTokenResponse>> reissue(
-		@RequestHeader(value = "RefreshToken") String token) {
-		ReissueTokenResponse reissueToken = reissueTokenService.reissueToken(token);
+		@RequestBody ReissueTokenRequest request) {
+		ReissueTokenResponse reissueToken = reissueTokenService.reissueToken(request.getRefreshToken());
 		return ResponseEntity.ok(SuccessResponse.create(REISSUE_TOKEN_SUCCESS.getMessage(), reissueToken));
 	}
 
