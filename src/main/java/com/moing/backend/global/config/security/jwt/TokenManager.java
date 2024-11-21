@@ -1,7 +1,10 @@
 package com.moing.backend.global.config.security.jwt;
 
 import java.security.Key;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,8 +36,11 @@ public class TokenManager implements InitializingBean {
 	private final RedisUtil redisUtil;
 	private final MemberGetService memberQueryService;
 
-	@Value("${jwt.secret}")
-	private String secretKey;
+	@Value("${jwt.privateKey}")
+	private String privateKeyPem;
+
+	@Value("${jwt.publicKey}")
+	private String publicKeyPem;
 
 	@Value("${jwt.access-token-period}")
 	private long accessTokenValidityTime;
@@ -42,23 +48,23 @@ public class TokenManager implements InitializingBean {
 	@Value("${jwt.refresh-token-period}")
 	private long refreshTokenValidityTime;
 
-	private Key key;
+	private Key privateKey;
+	private Key publicKey;
 
 	@Override
 	public void afterPropertiesSet() {
-		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
-		this.key = Keys.hmacShaKeyFor(keyBytes);
+		try {
+			this.privateKey = RSAKeyLoader.loadPrivateKey(privateKeyPem);
+			this.publicKey = RSAKeyLoader.loadPublicKey(publicKeyPem);
+		} catch (Exception e) {
+			log.error("키 변환 중 오류 발생: {}", e.getMessage());
+			throw new IllegalStateException("키 초기화 실패", e);
+		}
 	}
 
-	/**
-	 * 토큰 만드는 함수
-	 *
-	 * @param member
-	 * @return TokenInfoResponse
-	 */
 	public TokenInfoResponse createToken(Member member, boolean isAdditionalInfoProvided) {
-		// claim 생성
 		Claims claims = getClaims(member, isAdditionalInfoProvided);
+		claims.put("jti", UUID.randomUUID().toString());
 
 		Date now = new Date();
 		Date accessTokenValidity = new Date(now.getTime() + this.accessTokenValidityTime);
@@ -68,14 +74,14 @@ public class TokenManager implements InitializingBean {
 			.setClaims(claims)
 			.setIssuedAt(now)
 			.setExpiration(accessTokenValidity)
-			.signWith(SignatureAlgorithm.HS256, secretKey)
+			.signWith(SignatureAlgorithm.RS256, privateKey)
 			.compact();
 
 		String refreshToken = Jwts.builder()
 			.setClaims(claims)
 			.setIssuedAt(now)
 			.setExpiration(refreshTokenValidity)
-			.signWith(SignatureAlgorithm.HS256, secretKey)
+			.signWith(SignatureAlgorithm.RS256, privateKey)
 			.compact();
 
 		return TokenInfoResponse.from("Bearer", accessToken, refreshToken, refreshTokenValidityTime);
@@ -83,34 +89,34 @@ public class TokenManager implements InitializingBean {
 
 	public boolean verifyToken(String token) {
 		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+			Jws<Claims> claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
+
+			String jti = claims.getBody().get("jti", String.class);
+			if (redisUtil.isBlacklisted(jti)) {
+				log.info("블랙리스트에 등록된 JWT입니다. jti: {}", jti);
+				return false;
+			}
+
 			return claims.getBody().getExpiration().after(new Date());
-		} catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-			log.info("잘못된 JWT 서명입니다.");
-			throw e;
-		} catch (ExpiredJwtException e) {
-			log.info("만료된 JWT 토큰입니다.");
-			throw e;
-		} catch (UnsupportedJwtException e) {
-			log.info("지원되지 않는 JWT 토큰입니다.");
-			throw e;
-		} catch (IllegalArgumentException e) {
-			log.info("JWT 토큰이 잘못되었습니다.");
-			throw e;
 		} catch (Exception e) {
-			log.info(e.getMessage());
-			throw e;
+			log.info("JWT 검증 실패: {}", e.getMessage());
+			return false;
 		}
 	}
 
 	public boolean verifyRefreshToken(String token) {
 		try {
-			Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+			Jws<Claims> claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token);
 			return true;
+		} catch (ExpiredJwtException e) {
+			log.info("Refresh Token 만료: {}", e.getMessage());
+			return false;
 		} catch (Exception e) {
+			log.error("Refresh Token 검증 실패: {}", e.getMessage());
 			return false;
 		}
 	}
+
 
 	//refresh token 관련
 	public void storeRefreshToken(String socialId, TokenInfoResponse token) {
@@ -143,7 +149,7 @@ public class TokenManager implements InitializingBean {
 
 	// get 함수
 	public boolean getAdditionalInfoProvided(String token) {
-		Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+		Claims claims = Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody();
 		return claims.get(ADDITIONAL_INFO, Boolean.class);
 	}
 
@@ -155,11 +161,11 @@ public class TokenManager implements InitializingBean {
 	}
 
 	private Date getExpiration(String token) {
-		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getExpiration();
+		return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody().getExpiration();
 	}
 
 	public String getSocialId(String token) {
-		return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+		return Jwts.parser().setSigningKey(publicKey).parseClaimsJws(token).getBody().getSubject();
 	}
 
 }
